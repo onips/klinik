@@ -1,0 +1,158 @@
+{% extends 'index.html' %}
+{% block body %}
+
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+          <h1 class="h2">Kelola User</h1>
+          {% with errors = get_flashed_messages(category_filter=["error"]) %}
+          {% if errors %}
+          <div class="alert-message block-message error">
+            <a class="close" href="#">×</a>
+            <ul>
+              {%- for msg in errors %}
+              <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>{{msg}}</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+              {% endfor -%}
+            </ul>
+          </div>
+          {% endif %}
+          {% endwith %}
+        </div>
+        <div id="Loader">
+          <div class="d-flex justify-content-center">
+            <div class="spinner-border text-success" role="status" style="width: 10rem; height: 10rem;">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="container">
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">+Tambah User</button>
+      
+          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">User Baru</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <form action="{{url_for('tambahuser')}}" method="POST">
+                    <div class="mb-3">
+                      <label for="recipient-name" class="col-form-label">Username :</label>
+                      <input type="text" class="form-control" name="username" id="recipient-name">
+                    </div>
+                    <div class="mb-3">
+                      <label for="recipient-name" class="col-form-label">Password :</label>
+                      <input type="password" class="form-control" name="password" id="recipient-name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="validationCustom04" class="form-label">Level</label>
+                        <select class="form-select" id="validationCustom04" name="level" required>
+                          <option selected disabled value="">Pilih...</option>
+                          <option value="Admin">Admin</option>
+                          <option value="Dokter">Dokter</option>
+                          <option value="Administrasi">Administrasi</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                  <button type="submit" class="btn btn-primary">+Tambah</button>
+                </div>
+              </form>
+              </div>
+            </div>
+          </div>
+          <br><br>
+         <div class="card">
+           <div class="card-header">
+             Tabel User
+           </div>
+           <div class="card-body">
+             <table class="table table-bordered table-sm" id="myTable">
+               <thead class="table table-dark">
+                 <tr>
+                   <th scope="col">No.</th>
+                   <th scope="col">Username</th>
+                   <th scope="col">Level</th>
+                   <th scope="col">Aksi</th>
+                 </tr>
+               </thead>
+               <tbody>
+                {% for dt in data %}
+                 <tr>
+                   <th scope="row">{{loop.index}}</th>
+                   <td>{{dt.username}}</td>
+                   <td>{{dt.level}}</td>
+                   <td>
+                      <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#exampleModal1{{dt.id}}" data-bs-whatever="@mdo">Edit</button>
+                      <div class="modal fade" id="exampleModal1{{dt.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalLabel">Edit User</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              <form action="/edituser/{{dt.id}}" method="POST">
+                                <div class="mb-3">
+                                  <label for="recipient-name" class="col-form-label">Username :</label>
+                                  <input type="text" class="form-control" name="username" value="{{dt.username}}" id="recipient-name">
+                                </div>
+                                <div class="mb-3">
+                                  <label for="recipient-name" class="col-form-label">Password :</label>
+                                  <input type="password" class="form-control" name="password" id="recipient-name">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="validationCustom04" class="form-label">Level</label>
+                                    <select class="form-select" id="validationCustom04" name="level" required>
+                                      <option selected disabled value="">Pilih...</option>
+                                      <option value="Admin">Admin</option>
+                                      <option value="Dokter">Dokter</option>
+                                      <option value="Administrasi">Administrasi</option>
+                                    </select>
+                                </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                              <button type="submit" class="btn btn-warning">Edit</button>
+                            </div>
+                          </form>
+                          </div>
+                          </div>
+                        </div>
+                      </div>
+                      <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal2{{dt.id}}" data-bs-whatever="@mdo">Hapus</button>
+                      <div class="modal fade" id="exampleModal2{{dt.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalLabel">Konfirmasi</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              <h5>Apakah anda ingin menghapus data ini?</h5>  
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                              <a href="/hapususer/{{dt.id}}" class="btn btn-danger">Ya,Hapus</a>
+                            </div>
+                          </form>
+                          </div>
+                        </div>
+                      </div>
+                   </td>
+                 </tr>
+                 {% endfor %}
+               </tbody>
+             </table>
+           </div>
+         </div>
+        </div>
+
+
+      </main>
+
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends 'index.html' %}
+{% block body %}
+
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+          <h1 class="h2">Cari Pasien</h1>
+
+        </div>
+        <div id="Loader">
+          <div class="d-flex justify-content-center">
+            <div class="spinner-border text-success" role="status" style="width: 10rem; height: 10rem;">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="container">
+          <form action="/cari_data" method="POST"> 
+          <div class="col-md-2">
+              <label for="validationCustom04" class="form-label">Bulan</label>
+              <select class="form-select" id="validationCustom04" name="q" required>
+                <option selected disabled value="">Pilih...</option>
+                <option value="January">January</option>
+                <option value="February">February</option>
+                <option value="March">March </option>
+                <option value="April">April</option>
+                <option value="May">May</option>
+                <option value="June">June</option>
+                <option value="July">July</option>
+                <option value="August">August</option>
+                <option value="September">September</option>
+                <option value="October">October</option>
+                <option value="November">November</option>
+                <option value="December">December</option>
+              </select>
+            </div>
+            <br>
+            <div class="col-md-2">
+                <label for="validationCustom04" class="form-label">Tahun</label>
+                <select class="form-select" id="validationCustom04" name="q" required>
+                  <option selected disabled value="">Pilih...</option>
+                  <option value="2021">2021</option>
+                </select>
+              </div>
+              <br>
+              <br>
+              <button class="btn btn-sm btn-success" type="submit">Cari</button>
+            </form>
+            <br>
+            <br>
+
+         <div class="card">
+           <div class="card-header">
+             Tabel Pasien
+           </div>
+           <div class="card-body">
+             <table class="table table-bordered table-sm">
+               <thead class="table table-dark">
+                 <tr>
+                   <th scope="col">No.</th>
+                   <th scope="col">Nama</th>
+                   <th scope="col">Diagnosa</th>
+                   <th scope="col">Dokter</th>
+                   <th scope="col">Tanggal Periksa</th>
+                 </tr>
+               </thead>
+               <tbody>
+                {% for dt in datanya %}
+                 <tr>
+                   <th scope="row">{{loop.index}}</th>
+                   <td>{{dt.nama}}</td>
+                   <td>{{dt.diagnosal}}</td>
+                   <td>{{dt.user.username}}</td>
+                   <td>{{dt.tangga}}</td>
+                   <td></td>
+                 </tr>
+                 {% endfor %}
+               </tbody>
+             </table>
+           </div>
+         </div>
+        </div>
+
+{% endblock %}

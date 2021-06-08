@@ -1,0 +1,211 @@
+{% extends 'index.html' %}
+{% block body %}
+
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+          <h1 class="h2">Kelola Apotik</h1>
+
+        </div>
+        <div id="Loader">
+          <div class="d-flex justify-content-center">
+            <div class="spinner-border text-success" role="status" style="width: 10rem; height: 10rem;">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="container">
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">+Tambah Obat</button>
+      
+          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Obat Baru</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <form action="{{url_for('tambahobat')}}" id="idObat" method="POST">
+                    <div class="mb-3">
+                      <label for="recipient-name" class="col-form-label">Nama Obat :</label>
+                      <input type="text" class="form-control" name="namaObat" id="recipient-name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="validationCustom04" class="form-label">Jenis Obat</label>
+                        <select class="form-select" id="validationCustom04" name="jenisObat" required>
+                          <option selected disabled value="">Pilih...</option>
+                          <option value="Psikotoprika">Psikotoprika</option>
+                          <option value="Paten">Paten</option>
+                          <option value="Racikan">Racikan</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                      <label for="recipient-name" class="col-form-label">Harga Beli :</label>
+                      <input type="number" class="form-control" name="harga_beli" id="recipient-name">
+                    </div>
+                    <div class="mb-3">
+                      <label for="recipient-name" class="col-form-label">Harga Jual :</label>
+                      <input type="number" class="form-control" name="harga_jual" id="recipient-name">
+                    </div>
+                    <input type="hidden" value="Baik" name="kondisi">
+                    <div class="mb-3">
+                        <label for="validationCustom04" class="form-label">Suplier</label>
+                        <select class="form-select" id="validationCustom04" name="suplier_id" required>
+                          <option selected disabled value="">Pilih...</option>
+                          {% for d1 in data1 %}
+                          <option value="{{d1.id}}">{{d1.perusahaan}}</option>
+                          {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                  <button type="submit" class="btn btn-primary">+Tambah</button>
+                </div>
+              </form>
+              </div>
+            </div>
+          </div>
+          <br><br>
+         <div class="card">
+           <div class="card-header">
+             Tabel Obat
+           </div>
+           <div class="card-body">
+             <table class="table table-bordered table-sm" id="myTable">
+               <thead class="table table-dark">
+                 <tr>
+                   <th scope="col">No.</th>
+                   <th scope="col">Nama Obat</th>
+                   <th scope="col">Jenis Obat</th>
+                   <th scope="col">Harga Beli</th>
+                   <th scope="col">Harga Jual</th>
+                   <th scope="col">Suplier</th>
+                   <th scope="col">Aksi</th>
+                 </tr>
+               </thead>
+               <tbody>
+                {% for dt in data %}
+                 <tr>
+                   <th scope="row">{{loop.index}}</th>
+                   <td>{{dt.namaObat}}</td>
+                   <td>{{dt.jenisObat}}</td>
+                   <td>{{dt.harga_beli}}</td>
+                   <td>{{dt.harga_jual}}</td>
+                   <td>{{dt.suplier.perusahaan}}</td>
+
+                   <td>
+                      <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#exampleModal1{{dt.id}}" data-bs-whatever="@mdo">Edit</button>
+                      <div class="modal fade" id="exampleModal1{{dt.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalLabel">Edit Obat</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              <form action="/editobat/{{dt.id}}" id="editObat" method="POST">
+                                  <div class="mb-3">
+                                    <label for="recipient-name" class="col-form-label">Nama Obat :</label>
+                                    <input type="text" class="form-control" name="namaObat" value="{{dt.namaObat}}" id="recipient-name">
+                                  </div>
+                                  <div class="mb-3">
+                                      <label for="validationCustom04" class="form-label">Jenis Obat</label>
+                                      <select class="form-select" id="validationCustom04" name="jenisObat" required>
+                                        <option selected disabled value="">Pilih...</option>
+                                        <option value="Psikotoprika">Psikotoprika</option>
+                                        <option value="Paten">Paten</option>
+                                        <option value="Racikan">Racikan</option>
+                                      </select>
+                                  </div>
+                                  <div class="mb-3">
+                                    <label for="recipient-name" class="col-form-label">Harga Beli :</label>
+                                    <input type="number" class="form-control" name="harga_beli" value="{{dt.harga_beli}}" id="recipient-name">
+                                  </div>
+                                  <div class="mb-3">
+                                    <label for="recipient-name" class="col-form-label">Harga Jual :</label>
+                                    <input type="number" class="form-control" name="harga_jual" value="{{dt.harga_jual }}" id="recipient-name">
+                                  </div>
+                                  <div class="mb-3">
+                                      <label for="validationCustom04" class="form-label">Kondisi Obat</label>
+                                      <select class="form-select" id="validationCustom04" name="kondisi" required>
+                                        <option selected disabled value="">Pilih...</option>
+                                        <option value="Baik">Baik</option>
+                                        <option value="Rusak">Rusak</option>
+                                      </select>
+                                  </div>
+                                  <div class="mb-3">
+                                      <label for="validationCustom04" class="form-label">Suplier</label>
+                                      <select class="form-select" id="validationCustom04" name="suplier_id" required>
+                                        <option selected disabled value="">Pilih...</option>
+                                        {% for d1 in data1 %}
+                                        <option value="{{d1.id}}">{{d1.perusahaan}}</option>
+                                        {% endfor %}
+                                      </select>
+                                  </div>
+                                  <input type="hidden" value="{{dt.id}}" id="eObt">
+                              
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                                <button type="submit" class="btn btn-warning">Edit</button>
+                              </div>
+                            </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                   </td>
+                 </tr>
+                 {% endfor %}
+               </tbody>
+             </table>
+           </div>
+         </div>
+        </div>
+
+{% block tail %}
+          <script>
+            document.addEventListener("DOMContentLoaded", () => {
+              document.querySelector("#idObat").onsubmit = async (e) => {
+                  e.preventDefault();
+                  const req = new XMLHttpRequest();
+                  req.onload = () => {
+                    const data = JSON.parse(req.responseText);
+                    if(data.success) {
+                      alert("Data berhasil ditambahkan");
+                      location.reload();
+                    }else{
+                      alert("Ada trouble");
+                    }
+                  }
+                  const form = document.querySelector("#idObat");
+                  const datanya = new FormData(form);
+                  await req.open("POST", "/tambahobat", true);
+                  req.send(datanya);
+              }
+            });
+
+            document.addEventListener("DOMContentLoaded", () => {
+              document.querySelector("#editObat").onsubmit = async (e) => {
+                  e.preventDefault();
+                  const req = new XMLHttpRequest();
+                  req.onload = () => {
+                    const data = JSON.parse(req.responseText);
+                    if(data.success) {
+                      alert("Data berhasil diedit");
+                      location.reload(); 
+                    }else{
+                      alert("Ada trouble");
+                    }
+                  }
+                  const form = document.querySelector("#editObat");
+                  const datanya = new FormData(form);
+                  const nilai = document.querySelector("#eObt").value;
+                  await req.open("POST", `/editobat/${nilai}`, true);
+                  req.send(datanya);
+              }
+            });
+          </script>
+{% endblock %}
+
+{% endblock %}

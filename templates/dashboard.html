@@ -1,0 +1,148 @@
+{% extends 'index.html' %}
+{% block body %}
+
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+          <h1 class="h2">Dashboard</h1>
+          
+        </div>
+        <div id="Loader">
+          <div class="d-flex justify-content-center">
+            <div class="spinner-border text-success" role="status" style="width: 10rem; height: 10rem;">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        </div>
+
+        {% if session.level=='Admin' %}
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+          <div class="col-lg-3 lg-6">
+            <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+              <div class="card-body">
+                <i class="feather-64" data-feather="users"></i>
+                <h5 class="card-title">Dokter</h5>
+                <p class="card-text">{{data1}}</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 lg-6">
+            <div class="card text-white bg-success mb-3" style="max-width: 18rem;">
+              <div class="card-body">
+                <i class="feather-64" data-feather="user-plus"></i>
+                <h5 class="card-title">Kunjungan</h5>
+                <p class="card-text">{{data2}}</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 lg-6">
+            <div class="card text-white bg-danger mb-3" style="max-width: 18rem;">
+              <div class="card-body">
+                <i class="feather-64" data-feather="thumbs-down"></i>
+                <h5 class="card-title">Kerugian</h5>
+                <p class="card-text">{{"Rp.{:,}".format(data4)}}</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 lg-6">
+            <div class="card text-white bg-warning mb-3" style="max-width: 18rem;">
+              <div class="card-body">
+                <i class="feather-64" data-feather="smile"></i>
+                <h5 class="card-title">Jumlah User</h5>
+                <p class="card-text">{{data3}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <br>
+        <br>
+        <figure class="highcharts-figure">
+            <div id="container"></div>
+            <p class="highcharts-description">
+            </p>
+        </figure>
+
+
+        {% elif session.level == 'Dokter'%}
+        <main class="container">
+          <div class="bg-light p-5 rounded">
+            <h1>Welcome</h1>
+            <p class="lead">Selamat Datang Dokter</p>
+            <a class="btn btn-lg btn-primary" href="" role="button">Lihat Pasien &raquo;</a>
+          </div>
+        </main>
+
+        {% elif session.level == 'Administrasi'%}
+         <main class="container">
+          <div class="bg-light p-5 rounded">
+            <h1>Welcome</h1>
+            <p class="lead">Selamat Datang Di Laman Adminitrasi</p>
+            <a class="btn btn-lg btn-primary" href="" role="button">Lihat Pasien &raquo;</a>
+          </div>
+        </main>
+
+        {% endif %}
+
+{% block tail %}
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/modules/exporting.js"></script>
+  <script src="https://code.highcharts.com/modules/export-data.js"></script>
+  <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+  <script>
+    // Radialize the colors
+    Highcharts.setOptions({
+        colors: Highcharts.map(Highcharts.getOptions().colors, function (color) {
+            return {
+                radialGradient: {
+                    cx: 0.5,
+                    cy: 0.3,
+                    r: 0.7
+                },
+                stops: [
+                    [0, color],
+                    [1, Highcharts.color(color).brighten(-0.3).get('rgb')] // darken
+                ]
+            };
+        })
+    });
+
+    // Build the chart
+    Highcharts.chart('container', {
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            type: 'pie'
+        },
+        title: {
+            text: 'Kondisi Profit dan Kerugian Klinik'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        accessibility: {
+            point: {
+                valueSuffix: '%'
+            }
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    connectorColor: 'silver'
+                }
+            }
+        },
+        series: [{
+            name: 'Share',
+            data: [
+                { name: 'Profit', y: {{data5}} },
+                { name: 'Kerugian', y: {{data4}} },
+            ]
+        }]
+    });
+  </script>
+{% endblock %}
+{% endblock %}
